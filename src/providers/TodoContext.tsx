@@ -18,7 +18,7 @@ export function TodoProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const storedTasks = localStorage.getItem("tasks");
     if (storedTasks) {
-      setTasks(JSON.parse(storedTasks));
+      setTasks(JSON.parse(storedTasks) as Task[]);
     }
   }, []);
 
@@ -36,16 +36,16 @@ export function TodoProvider({ children }: { children: ReactNode }) {
       completed: false,
     };
 
-    setTasks([...tasks, newTask]);
+    setTasks((prevTasks) => [...prevTasks, newTask]);
   }
 
   function deleteTask(id: string) {
-    setTasks(tasks.filter((task) => task.id !== id));
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
   }
 
   function toggleCompleteTask(id: string) {
-    setTasks(
-      tasks.map((task) =>
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
         task.id === id ? { ...task, completed: !task.completed } : task
       )
     );
