@@ -1,16 +1,54 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState } from "react";
+import type { ReactNode } from "react";
+import { v4 as uuidv4 } from "uuid";
 import type { Task } from "../types/taskTypes";
 
 type TodoContextType = {
-  todoList: Task[];
+  tasks: Task[];
   addTask: (taskName: string, deadline: string) => void;
-  handleToggleCompleteTask: (id: string) => void;
-  handleDeleteTask: (id: string) => void;
+  deleteTask: (id: string) => void;
+  toggleCompleteTask: (id: string) => void;
 };
-export const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
-export function TodoProvider({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+const TodoContext = createContext<TodoContextType | undefined>(undefined);
+
+export function TodoProvider({ children }: { children: ReactNode }) {
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  function addTask(taskName: string, deadline: string) {
+    if (taskName.trim() === "") {
+      return;
+    }
+
+    const newTask: Task = {
+      id: uuidv4(),
+      name: taskName,
+      deadline: deadline.trim() === "" ? undefined : deadline,
+      completed: false,
+    };
+
+    setTasks([...tasks, newTask]);
+  }
+
+  function deleteTask(id: string) {
+    setTasks(tasks.filter((task) => task.id !== id));
+  }
+
+  function toggleCompleteTask(id: string) {
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
+  }
+
+  return (
+    <TodoContext.Provider
+      value={{ tasks, addTask, deleteTask, toggleCompleteTask }}
+    >
+      {children}
+    </TodoContext.Provider>
+  );
 }
 
 export function useTodo() {
