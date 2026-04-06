@@ -16,13 +16,25 @@ function TodoList() {
     const newTask: Task = {
       id: uuidv4(),
       name: taskName,
-      deadline: deadline || undefined,
+      deadline: deadline.trim() === "" ? undefined : deadline,
       completed: false,
     };
 
     setTodoList([...todoList, newTask]);
     setNewTaskName("");
     setNewTaskDeadline("");
+  }
+
+  function handleToggleCompleteTask(id: string) {
+    const updatedTodoList = todoList.map((task) =>
+      task.id === id ? { ...task, completed: !task.completed } : task
+    );
+    setTodoList(updatedTodoList);
+  }
+
+  function handleDeleteTask(id: string) {
+    const updatedTodoList = todoList.filter((task) => task.id !== id);
+    setTodoList(updatedTodoList);
   }
 
   return (
@@ -51,9 +63,14 @@ function TodoList() {
         <button type="submit">Add Task</button>
       </form>
 
-      {todoList.map((task) => {
-        return <TodoItem key={task.id} task={task} />;
-      })}
+      {todoList.map((task) => (
+        <TodoItem
+          key={task.id}
+          task={task}
+          handleToggleCompleteTask={handleToggleCompleteTask}
+          handleDeleteTask={handleDeleteTask}
+        />
+      ))}
     </div>
   );
 }
