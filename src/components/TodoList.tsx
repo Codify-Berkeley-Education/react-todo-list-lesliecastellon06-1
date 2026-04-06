@@ -16,11 +16,11 @@ function TodoList() {
     const newTask: Task = {
       id: uuidv4(),
       name: taskName,
-      deadline: deadline,
+      deadline: deadline || undefined,
+      completed: false,
     };
 
     setTodoList([...todoList, newTask]);
-
     setNewTaskName("");
     setNewTaskDeadline("");
   }

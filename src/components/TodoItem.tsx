@@ -7,8 +7,14 @@ type TodoItemProps = {
 function TodoItem({ task }: TodoItemProps) {
   return (
     <div>
-      <h3>{task.name}</h3>
-      <p>Deadline: {task.deadline}</p>
+      <label>
+        <input type="checkbox" checked={task.completed} readOnly />
+        <span style={{ textDecoration: task.completed ? "line-through" : "none" }}>
+          {task.name}
+        </span>
+      </label>
+
+      {task.deadline && <p>Deadline: {task.deadline}</p>}
     </div>
   );
 }
