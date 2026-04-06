@@ -7,7 +7,6 @@ type TodoContextType = {
   handleToggleCompleteTask: (id: string) => void;
   handleDeleteTask: (id: string) => void;
 };
-
 export const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
