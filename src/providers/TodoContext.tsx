@@ -1,33 +1,25 @@
-import {
-	type FC,
-	createContext,
-	useState,
-	useContext,
-	type ReactNode,
-	useEffect,
-} from "react";
-import { v4 as uuid } from "uuid";
+import { createContext, useContext } from "react";
+import type { Task } from "../types/taskTypes";
 
 type TodoContextType = {
-	// Todo 3.1
+  todoList: Task[];
+  addTask: (taskName: string, deadline: string) => void;
+  handleToggleCompleteTask: (id: string) => void;
+  handleDeleteTask: (id: string) => void;
 };
 
-const TodoContext = createContext<TodoContextType | undefined>(undefined);
+export const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
-export const TodoProvider: FC<{ children: ReactNode }> = ({ children }) => {
-	// Todo 3.2
+export function TodoProvider({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
 
-	const value: TodoContextType = {
-		// Todo 3.2
-	};
+export function useTodo() {
+  const context = useContext(TodoContext);
 
-	return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
-};
+  if (!context) {
+    throw new Error("useTodo must be used within a TodoProvider");
+  }
 
-export const useTodo = (): TodoContextType => {
-	const context = useContext(TodoContext);
-	if (context === undefined) {
-		throw new Error("useTodo must be used within a TodoProvider");
-	}
-	return context;
-};
+  return context;
+}
