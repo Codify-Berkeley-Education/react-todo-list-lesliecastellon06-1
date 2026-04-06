@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import type { Task } from "../types/taskTypes";
+import TodoItem from "./TodoItem";
 
 function TodoList() {
   const [newTaskName, setNewTaskName] = useState<string>("");
@@ -20,7 +21,6 @@ function TodoList() {
 
     setTodoList([...todoList, newTask]);
 
-    // clear inputs
     setNewTaskName("");
     setNewTaskDeadline("");
   }
@@ -51,7 +51,9 @@ function TodoList() {
         <button type="submit">Add Task</button>
       </form>
 
-      <p>{JSON.stringify(todoList)}</p>
+      {todoList.map((task) => {
+        return <TodoItem key={task.id} task={task} />;
+      })}
     </div>
   );
 }
