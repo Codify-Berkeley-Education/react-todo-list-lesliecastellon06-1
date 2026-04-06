@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import { v4 as uuidv4 } from "uuid";
 import type { Task } from "../types/taskTypes";
@@ -15,10 +15,19 @@ const TodoContext = createContext<TodoContextType | undefined>(undefined);
 export function TodoProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  function addTask(taskName: string, deadline: string) {
-    if (taskName.trim() === "") {
-      return;
+  useEffect(() => {
+    const storedTasks = localStorage.getItem("tasks");
+    if (storedTasks) {
+      setTasks(JSON.parse(storedTasks));
     }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+
+  function addTask(taskName: string, deadline: string) {
+    if (taskName.trim() === "") return;
 
     const newTask: Task = {
       id: uuidv4(),
