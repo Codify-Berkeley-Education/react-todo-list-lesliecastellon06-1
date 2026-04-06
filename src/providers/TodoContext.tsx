@@ -13,14 +13,10 @@ type TodoContextType = {
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
 export function TodoProvider({ children }: { children: ReactNode }) {
-  const [tasks, setTasks] = useState<Task[]>([]);
-
-  useEffect(() => {
+  const [tasks, setTasks] = useState<Task[]>(() => {
     const storedTasks = localStorage.getItem("tasks");
-    if (storedTasks) {
-      setTasks(JSON.parse(storedTasks) as Task[]);
-    }
-  }, []);
+    return storedTasks ? (JSON.parse(storedTasks) as Task[]) : [];
+  });
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
